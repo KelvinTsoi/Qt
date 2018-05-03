@@ -11,11 +11,11 @@ MainWindow::MainWindow(QWidget *parent) :
     Serial::Instance()->InitSerial(ui);
 
     //固定主窗口不能改动
-    this->setFixedSize(460, 425);
+    this->setFixedSize(460, 450);
 
     //限制文本框输入电话号码
     QRegExp regx("[0-9]+$");
-    QValidator *validator = new QRegExpValidator(regx, ui->PhoneLineEdit );
+    QValidator *validator = new QRegExpValidator(regx, ui->PhoneLineEdit);
     ui->PhoneLineEdit->setValidator(validator);
 
     //工作模式下拉条
@@ -142,7 +142,7 @@ void MainWindow::on_OuchButton_clicked(bool checked)
         }
 
         //Start Thread
-        WorkingThread->ThreadStart(PhoneNumber, Directory);
+        WorkingThread->ThreadStart(PhoneNumber, Directory, ui);
     }
     //Cancel Auto Process
     else
@@ -156,11 +156,15 @@ void MainWindow::on_Instructions(QString ins)
 {
     char* pwList;
 
+    int length = ins.length();
+
     QByteArray tp = ins.toLatin1();
 
     pwList = tp.data();
 
-    Serial::Instance()->SendInstructions(pwList, 7);
+    Serial::Instance()->SendInstructions(pwList, length);
+
+    qDebug() << "Instruction ["+ ins +"] has been send" << endl;
 }
 
 void MainWindow::on_Key1_clicked()

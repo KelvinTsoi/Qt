@@ -10,14 +10,11 @@ void Thread::ThreadStop()
     enable = false;
 }
 
-void Thread::ThreadStart(QString phone, QString dir)
+void Thread::ThreadStart(QString phone, QString dir, Ui::MainWindow *m_ui)
 {
-    //Get Phone Number & XML Directory
     PhoneNumber = phone;
     Directory = dir;
-
-
-
+    ui = m_ui;
     enable = true;
 }
 
@@ -29,6 +26,8 @@ bool Thread::ThreadState()
 void Thread::run()
 {
     qDebug() << "Thread is on board" << endl;
+
+    int counter = 1;
 
     while(true)
     {
@@ -42,7 +41,30 @@ void Thread::run()
 
             emit ThreadSignal(PasswordStr);
 
-            sleep(5);
+            sleep(20);
+
+            if(counter % 5 == 0 && ui->StatusSwitchButton->isChecked())
+            {
+                PasswordStr.sprintf("#*400", Password);
+
+                emit ThreadSignal(PasswordStr);
+
+                sleep(10);
+
+                PasswordStr.sprintf("8", Password);
+
+                emit ThreadSignal(PasswordStr);
+
+                sleep(15);
+            }
+            else if(counter % 13 == 0 && ui->CallingButton->isChecked())
+            {
+                PasswordStr = PhoneNumber + "o";
+                emit ThreadSignal(PasswordStr);
+                sleep(60);
+            }
+
+            counter++;
         }
     }
 }

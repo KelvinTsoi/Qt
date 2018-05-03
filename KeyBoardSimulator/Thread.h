@@ -26,7 +26,7 @@ public:
 
     Thread();
 
-    void ThreadStart(QString phone, QString dir);
+    void ThreadStart(QString phone, QString dir, Ui::MainWindow *m_ui);
 
     void ThreadStop();
 
@@ -55,6 +55,8 @@ private:
     QString PhoneNumber;
 
     QString Directory;
+
+    Ui::MainWindow *ui;
 };
 
 #endif // WORKTHREAD_H
